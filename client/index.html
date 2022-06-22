@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Produit original</title>
+        <!-- Load Vue followed by Vue Router -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/http-vue-loader/src/httpVueLoader.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v9.0" nonce="xHI6EQgj"></script>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Roboto', sans-serif;
+            }
+            header #logo{
+                width: 100px;
+                height:100px;
+                border-radius: 50%;
+                margin: auto;
+                filter : drop-shadow(2px 3px 4px black);
+            }
+            header #backgroundlogo{
+                background-color: rgb(141, 218, 207);
+                height: 200px;
+                width: auto;
+                display: flex;
+            }
+            header #barreOutils {
+                display: flex;
+                padding: 12px ;
+                background-color: #333;
+                justify-content: flex-end;
+                margin-bottom: 4em;
+            }
+            header a{
+                color: #fff;
+                background-color: #333;
+                width: 150px;
+                border: 1px solid #fff;
+                border-radius: 10px;
+                outline: 0;
+                padding: 8px 12px ;
+                text-align: center ;
+                text-decoration: none;
+                font: bold 12px Verdana;
+                transition: all 1s ease-out;
+                vertical-align: middle;
+            }
+            header a:hover {
+                color: #333;
+                background-color: #fff;
+            }
+            header a:not(:last-child) {
+                margin-right: 12px;
+            }
+            header a:last-child{
+                width: 25px;
+            }
+            header #search_icon, #achat_icon, #profil_icon, #accueil_icon, #vente_icon, #login_icon{
+                width: 20px;
+                height: 20px; 
+                background-color: transparent;
+                vertical-align: middle;
+            }
+            footer{
+                width: auto;
+                background-color: #1c1a1a;
+                color: white;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                margin-top: 4em;
+            }
+            footer div{
+                margin: 50px 20px;
+                height: 150px;
+            }
+            footer a{
+                text-decoration: none;
+                color: white;
+            }
+            footer #fb_icon, #tw_icon{
+                height: 18px;
+                width: 18px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <header>
+                <nav id="barreOutils">
+                    <img id="logo" src="img/logo.png">
+                    <router-link to='/'><img id="accueil_icon" src="img/accueil.png"> Accueil</router-link>
+                    <router-link to='/achat'><img id="achat_icon" src="img/achat.png"> Achat</router-link>
+                    <router-link to='/vente'><img id="vente_icon" src="img/vente.png"> Vente</router-link>
+                    <router-link to='/compte'><img id="profil_icon" src="img/profil.png"> Mon compte</router-link>
+                    <router-link to='/register'><img id="login_icon" src="img/login.png"></router-link>
+                </nav>
+            </header>
+            <main>
+                <router-view
+                :is-connected="isConnected"
+                @login="login"
+                ></router-view>
+            </main>
+            <footer>
+                <div>
+                    <h3>Mon compte</h3>
+                    <p><router-link to='/register'>Connexion</router-link></p>
+                    <p><router-link to='/register'>Créer un compte</router-link></p>
+                </div>
+                <div>
+                    <h3>A propos</h3>
+                    <p><router-link to='/mention_legales'>Mentions Légales</router-link></p>
+                    <p><router-link to='/notre_histoire'>Notre histoire</router-link></p>
+                </div>
+                <div>
+                    <h3>Partager</h3>
+                    <p><img src="img/fb.png" id="fb_icon"> <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fgroupe330.fr%2F%23%2F&amp;src=sdkpreparse">Facebook</a></p>
+                    <p><img src="img/tw.png" id="tw_icon"> <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-text="LocalEtFrais" data-url="http://groupe330.fr/#/" data-lang="fr" data-show-count="false">Twitter</a></p>
+                </div>
+            </footer>
+        </div>
+        <script>
+            const Accueil = window.httpVueLoader('./components/Accueil.vue')
+            const Achat = window.httpVueLoader('./components/Achat.vue')
+            const MentionLegales = window.httpVueLoader('./components/MentionLegales.vue')
+            //const Rechercher = window.httpVueLoader('./components/Rechercher.vue')
+            const Register = window.httpVueLoader('./components/Register.vue')
+            const Register_producteur = window.httpVueLoader('./components/Register_producteur.vue')
+            const Register_acheteur = window.httpVueLoader('./components/Register_acheteur.vue')
+            const Vente = window.httpVueLoader('./components/Vente.vue')
+            const Notre_histoire = window.httpVueLoader('./components/Notre_histoire.vue')
+            const Annonce_produit = window.httpVueLoader('./components/Annonce_produit.vue')
+            const Profil_producteur = window.httpVueLoader('./components/Profil_producteur.vue')
+            const Mon_compte = window.httpVueLoader('./components/Mon_profil.vue')
+            const routes = [
+                { path: '/', component: Accueil, meta: {title: 'Accueil'} },
+                { path: '/vente', component: Vente, meta: {title: 'Vente'} },
+                { path: '/achat', component: Achat, meta: {title: 'Achat'} },
+                { path: '/mention_legales', component: MentionLegales, meta: {title: 'Mentions légales'} },
+                //{ path: '/rechercher', component: Rechercher, meta: {title: 'Rechercher'}},
+                { path: '/register', component: Register, meta: {title: 'Mon compte'}},
+                { path: '/register_producteur', component: Register_producteur, meta: {title: 'Créer un compte producteur'}},
+                { path: '/register_acheteur', component: Register_acheteur, meta: {title: 'Créer un compte acheteur'}},
+                { path: '/notre_histoire', component: Notre_histoire, meta: {title: 'Notre histoire'}},
+                { path: '/annonce_produit', component: Annonce_produit, meta: {title: 'Produit'}},
+                { path: '/profil_producteur', component: Profil_producteur, meta: {title: 'Profil producteur'}},
+                { path: '/compte', component: Mon_compte, meta: {title: 'Mon compte'}}
+            ]
+            const router = new VueRouter({
+                routes
+            })
+            var app = new Vue({
+                router,
+                el: '#app',
+                data: {
+                    variable: "variable",
+                    isConnected: false,
+                },
+                async mounted () {
+                    /*const res = await axios.get('/api/articles')
+                    this.articles = res.data*/
+                },
+                methods: {
+                    async login (user) {
+                        const res = await axios.post('/api/login', user)
+                        this.user = res.data
+                        this.isConnected = true
+                        this.$router.push('/')
+                        console.log(this.user)
+                    }
+                }
+            })
+            const default_title = 'Some Default Title';
+            router.afterEach((to, from) => {
+                Vue.nextTick(() => {
+                    document.title = to.meta.title || default_title;
+                });
+            })
+        </script>
+    </body>
+</html>
+
